@@ -75,6 +75,11 @@ class Resource {
           HttpClient httpClient = new HttpClient();
           final HttpClientRequest request = await httpClient.getUrl(_remote);
           final HttpClientResponse response = await request.close();
+
+          if (response.statusCode != 200) {
+            throw new HttpException(response.reasonPhrase, uri: _remote);
+          }
+
           final Uint8List bytes = await consolidateHttpClientResponseBytes(
               response,
               autoUncompress: false);
